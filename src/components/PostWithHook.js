@@ -35,11 +35,14 @@ const NwseArrow = styled(Arrow)`
   transform: rotate(45deg);
 `
 
+// Uncomment the default values and remove the ref for an alternative way of using useResizer()!
 const resizerConfig = {
   minHeight: 270,
   minWidth: 300,
   maxWidth: 800,
   preserveRatio: true,
+  // defaultWidth: 400,
+  // defaultHeight: 400,
 }
 
 const PostWithHook = () => {
@@ -52,7 +55,7 @@ const PostWithHook = () => {
       <Name>John Doe</Name>
       <Close />
       <Description>
-        That's a functional component using the useResizer hook! <br /> Fancy.
+        That's a functional component using the useResizer hook!
       </Description>
       <NsArrow onMouseDown={handleMouseDown('bottom')}>{'<=>'}</NsArrow>
       <EwArrow onMouseDown={handleMouseDown('right')}>{'<=>'}</EwArrow>

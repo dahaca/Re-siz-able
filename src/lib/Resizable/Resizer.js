@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {
   element,
@@ -10,6 +10,7 @@ import {
   object,
 } from 'prop-types'
 import generateStyles from './utils/generateStyles'
+import useResizer from './useResizer'
 
 const DefaultHandle = styled.div`
   position: absolute;
@@ -41,145 +42,29 @@ const Resizer = ({
   children,
   handles = ['left', 'right'],
   minWidth = 100,
-  maxWidth = 600,
+  maxWidth = 1000,
   minHeight = 100,
-  maxHeight = 600,
+  maxHeight = 1000,
   hideHandles,
   preserveRatio,
   customHandle,
   className,
 }) => {
-  const [width, setWidth] = useState()
-  const [height, setHeight] = useState()
-  const [mouseDown, setMouseDown] = useState(false)
-  const [initialPosition, setInitialPosition] = useState(null)
-  const [initialWidth, setInitialWidth] = useState()
-  const [initialHeight, setInitialHeight] = useState()
-  const childElement = useRef()
+  const { elementRef, width, height, handleMouseDown } = useResizer({
+    minWidth,
+    maxWidth,
+    minHeight,
+    maxHeight,
+    preserveRatio,
+  })
+
   const Handle = customHandle ? customHandle : DefaultHandle
-
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [mouseDown])
-
-  useEffect(() => {
-    setWidth(childElement.current.getBoundingClientRect().width)
-    setHeight(childElement.current.getBoundingClientRect().height)
-  }, [])
-
-  const handleMouseDown = handle => e => {
-    setMouseDown(handle)
-    setInitialPosition({ x: e.pageX, y: e.pageY })
-    setInitialWidth(childElement.current.getBoundingClientRect().width)
-    setInitialHeight(childElement.current.getBoundingClientRect().height)
-  }
-
-  const handleMouseUp = () => {
-    if (mouseDown) {
-      setMouseDown(null)
-    }
-  }
-
-  const handleMouseMove = e => {
-    if (!mouseDown) {
-      return
-    }
-
-    const checkNewWidth = width => {
-      if (width < minWidth) return minWidth
-      if (width > maxWidth) return maxWidth
-
-      return width
-    }
-
-    const checkNewHeight = height => {
-      if (height < minHeight) return minHeight
-      if (height > maxHeight) return maxHeight
-
-      return height
-    }
-
-    const setDimentions = (deltaHeight, deltaWidth, preserveRatio) => {
-      if (preserveRatio) {
-        const delta = Math.max(deltaWidth, deltaHeight)
-
-        setHeight(checkNewHeight(initialHeight + delta))
-        setWidth(checkNewWidth(initialWidth + delta))
-
-        return
-      }
-
-      setHeight(checkNewHeight(initialHeight + deltaHeight))
-      setWidth(checkNewWidth(initialWidth + deltaWidth))
-    }
-
-    switch (mouseDown) {
-      case 'right':
-        setWidth(checkNewWidth(initialWidth + (e.pageX - initialPosition.x)))
-        break
-
-      case 'left':
-        setWidth(checkNewWidth(initialWidth + (initialPosition.x - e.pageX)))
-        break
-
-      case 'top':
-        setHeight(checkNewHeight(initialHeight + (initialPosition.y - e.pageY)))
-        break
-
-      case 'bottom':
-        setHeight(checkNewHeight(initialHeight + (e.pageY - initialPosition.y)))
-        break
-
-      case 'top-left':
-        setDimentions(
-          initialPosition.y - e.pageY,
-          initialPosition.x - e.pageX,
-          preserveRatio
-        )
-        break
-
-      case 'top-right':
-        setDimentions(
-          initialPosition.y - e.pageY,
-          e.pageX - initialPosition.x,
-          preserveRatio
-        )
-        break
-
-      case 'bottom-right':
-        setDimentions(
-          e.pageY - initialPosition.y,
-          e.pageX - initialPosition.x,
-          preserveRatio
-        )
-        break
-
-      case 'bottom-left':
-        setDimentions(
-          e.pageY - initialPosition.y,
-          initialPosition.x - e.pageX,
-          preserveRatio
-        )
-        break
-
-      default:
-        console.error('Invalid handle type!')
-        break
-    }
-  }
 
   const renderChildWithRef = () => {
     try {
       const child = React.Children.only(children)
-
       return React.cloneElement(child, {
-        ref: childElement,
+        ref: elementRef,
       })
     } catch (err) {
       console.error('The Resizer component can have only one child!')

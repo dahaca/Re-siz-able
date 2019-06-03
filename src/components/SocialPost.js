@@ -38,7 +38,12 @@ export const Description = styled.div`
 `
 
 const SocialPost = () => (
-  <Resizer handles={['bottom', 'right', 'left']} minHeight={150} minWidth={250}>
+  <Resizer
+    handles={['bottom', 'right', 'left']}
+    minHeight={300}
+    maxHeight={600}
+    minWidth={300}
+  >
     <PostContainer>
       <Name>John Doe</Name>
       <Close />

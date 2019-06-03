@@ -137,11 +137,11 @@ const App = () => (
         </Resizer>
       </TallContainer>
 
-      <Description>
+      <Description style={{ marginBottom: -32 }}>
         A div wrapped with the Resizer component. Bottom-right, top-right and
         right handles are enabled. When using bottom-right and top-right handles
         the dimention ratio of is preserved. Can be observed with the help of
-        the right hangle. Max width and height are set to 500px.
+        the right handle. Max width and height are set to 500px.
       </Description>
       <ElementAtBottomConteiner>
         <Resizer

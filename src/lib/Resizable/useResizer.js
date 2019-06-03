@@ -1,20 +1,29 @@
 import { useState, useEffect, useRef } from 'react'
-import { objectOf, oneOf } from 'prop-types'
 
 const useResizer = resizerConfig => {
-  const config = {
+  const {
+    minWidth,
+    maxWidth,
+    minHeight,
+    maxHeight,
+    preserveRatio,
+    defaultWidth,
+    defaultHeight,
+  } = {
     minWidth: 100,
     maxWidth: 600,
     minHeight: 100,
     maxHeight: 600,
     preserveRatio: false,
+    defaultWidth: undefined,
+    defaultHeight: undefined,
     ...resizerConfig,
   }
 
-  const [width, setWidth] = useState()
-  const [height, setHeight] = useState()
+  const [width, setWidth] = useState(defaultWidth)
+  const [height, setHeight] = useState(defaultHeight)
   const [mouseDown, setMouseDown] = useState(false)
-  const [initialPosition, setInitialPosition] = useState(null)
+  const [initialCursorPosition, setInitialCursorPosition] = useState(null)
   const [initialWidth, setInitialWidth] = useState()
   const [initialHeight, setInitialHeight] = useState()
   const elementRef = useRef()
@@ -30,15 +39,23 @@ const useResizer = resizerConfig => {
   }, [mouseDown])
 
   useEffect(() => {
-    setWidth(elementRef.current.getBoundingClientRect().width)
-    setHeight(elementRef.current.getBoundingClientRect().height)
+    if (elementRef.current) {
+      setWidth(elementRef.current.getBoundingClientRect().width)
+      setHeight(elementRef.current.getBoundingClientRect().height)
+    } else {
+      if (!defaultHeight || !defaultWidth) {
+        console.error(
+          'Define both defaultHeight and defaultWidth for your component or use the elementRef!'
+        )
+      }
+    }
   }, [])
 
   const handleMouseDown = handle => e => {
     setMouseDown(handle)
-    setInitialPosition({ x: e.pageX, y: e.pageY })
-    setInitialWidth(elementRef.current.getBoundingClientRect().width)
-    setInitialHeight(elementRef.current.getBoundingClientRect().height)
+    setInitialCursorPosition({ x: e.pageX, y: e.pageY })
+    setInitialWidth(width)
+    setInitialHeight(height)
   }
 
   const handleMouseUp = () => {
@@ -53,15 +70,15 @@ const useResizer = resizerConfig => {
     }
 
     const checkNewWidth = width => {
-      if (width < config.minWidth) return config.minWidth
-      if (width > config.maxWidth) return config.maxWidth
+      if (width < minWidth) return minWidth
+      if (width > maxWidth) return maxWidth
 
       return width
     }
 
     const checkNewHeight = height => {
-      if (height < config.minHeight) return config.minHeight
-      if (height > config.maxHeight) return config.maxHeight
+      if (height < minHeight) return minHeight
+      if (height > maxHeight) return maxHeight
 
       return height
     }
@@ -69,7 +86,6 @@ const useResizer = resizerConfig => {
     const setDimentions = (deltaHeight, deltaWidth, preserveRatio) => {
       if (preserveRatio) {
         const delta = Math.max(deltaWidth, deltaHeight)
-
         setHeight(checkNewHeight(initialHeight + delta))
         setWidth(checkNewWidth(initialWidth + delta))
 
@@ -82,50 +98,58 @@ const useResizer = resizerConfig => {
 
     switch (mouseDown) {
       case 'right':
-        setWidth(checkNewWidth(initialWidth + (e.pageX - initialPosition.x)))
+        setWidth(
+          checkNewWidth(initialWidth + (e.pageX - initialCursorPosition.x))
+        )
         break
 
       case 'left':
-        setWidth(checkNewWidth(initialWidth + (initialPosition.x - e.pageX)))
+        setWidth(
+          checkNewWidth(initialWidth + (initialCursorPosition.x - e.pageX))
+        )
         break
 
       case 'top':
-        setHeight(checkNewHeight(initialHeight + (initialPosition.y - e.pageY)))
+        setHeight(
+          checkNewHeight(initialHeight + (initialCursorPosition.y - e.pageY))
+        )
         break
 
       case 'bottom':
-        setHeight(checkNewHeight(initialHeight + (e.pageY - initialPosition.y)))
+        setHeight(
+          checkNewHeight(initialHeight + (e.pageY - initialCursorPosition.y))
+        )
         break
 
       case 'top-left':
         setDimentions(
-          initialPosition.y - e.pageY,
-          initialPosition.x - e.pageX,
-          config.preserveRatio
+          initialCursorPosition.y - e.pageY,
+          initialCursorPosition.x - e.pageX,
+          preserveRatio
         )
         break
 
       case 'top-right':
         setDimentions(
-          initialPosition.y - e.pageY,
-          e.pageX - initialPosition.x,
-          config.preserveRatio
+          initialCursorPosition.y - e.pageY,
+          e.pageX - initialCursorPosition.x,
+          preserveRatio
         )
         break
 
       case 'bottom-right':
         setDimentions(
-          e.pageY - initialPosition.y,
-          e.pageX - initialPosition.x,
-          config.preserveRatio
+          e.pageY - initialCursorPosition.y,
+          e.pageX - initialCursorPosition.x,
+          preserveRatio
         )
         break
 
       case 'bottom-left':
         setDimentions(
-          e.pageY - initialPosition.y,
-          initialPosition.x - e.pageX,
-          config.preserveRatio
+          e.pageY - initialCursorPosition.y,
+          initialCursorPosition.x - e.pageX,
+          preserveRatio
         )
         break
 
@@ -136,12 +160,6 @@ const useResizer = resizerConfig => {
   }
 
   return { elementRef, width, height, handleMouseDown }
-}
-
-useResizer.propTypes = {
-  config: objectOf(
-    oneOf(['minWidth', 'maxWidth', 'minHeight', 'maxHeight', 'preserveRatio'])
-  ),
 }
 
 export default useResizer
