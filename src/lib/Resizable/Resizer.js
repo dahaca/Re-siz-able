@@ -58,6 +58,12 @@ const Resizer = ({
     preserveRatio,
   })
 
+  if (handles.length === 0) {
+    console.error(
+      'You must include at least one handle name in the handles array!'
+    )
+  }
+
   const Handle = customHandle ? customHandle : DefaultHandle
 
   const renderChildWithRef = () => {

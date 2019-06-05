@@ -11,18 +11,23 @@ import CustomHandle from './components/CustomHandle'
 import PostWithHook from './components/PostWithHook'
 
 const GlobalStyle = createGlobalStyle`
-  * {
+* {
     font-family: 'Helvetica Neue';
     box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
   }
 `
 
 const Playground = styled.div`
+  position: relative;
   display: grid;
   grid-gap: 4rem;
   grid-template-rows: 1fr;
   min-height: 100vh;
-  padding: 2rem 5rem;
+  padding: 2rem 5rem 4rem 5rem;
 `
 
 const Title = styled.div`
@@ -71,12 +76,18 @@ const ElementAtBottomConteiner = styled.div`
   background: #f5f3f3;
 `
 
+const Footer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  font-weight: 600;
+`
+
 const App = () => (
   <>
     <GlobalStyle />
     <Playground>
       <Title>A Cool Re–siz–able Demo</Title>
-
       <div>
         <Description>
           A div wrapped with the Resizer component. Only the right handle is
@@ -86,10 +97,9 @@ const App = () => (
           <Square />
         </Resizer>
       </div>
-
       <CenteredContainer>
         <Description>
-          JSX SocialPost wrapped with the Resizer component. Left and right
+          HTML SocialPost wrapped with the Resizer component. Left and right
           handles are enabled but not visible. Min width is set to 300px
         </Description>
         <Resizer handles={['right', 'left']} hideHandles minWidth={300}>
@@ -100,7 +110,6 @@ const App = () => (
           </PostContainer>
         </Resizer>
       </CenteredContainer>
-
       <RightContainer>
         <Description>
           A div wrapped with the Resizer component. Only the left handle is
@@ -116,11 +125,9 @@ const App = () => (
           <Square />
         </Resizer>
       </RightContainer>
-
       <CenteredTallContainer>
         <SocialPost />
       </CenteredTallContainer>
-
       <TallContainer>
         <Description>
           A div wrapped with the Resizer component. Bottom-right handle is
@@ -136,7 +143,6 @@ const App = () => (
           <Square />
         </Resizer>
       </TallContainer>
-
       <Description style={{ marginBottom: -32 }}>
         A div wrapped with the Resizer component. Bottom-right, top-right and
         right handles are enabled. When using bottom-right and top-right handles
@@ -153,10 +159,10 @@ const App = () => (
           <Square />
         </Resizer>
       </ElementAtBottomConteiner>
-
       <CenteredTallContainer>
         <PostWithHook />
       </CenteredTallContainer>
+      <Footer>by Leonid Grishchenin</Footer>
     </Playground>
   </>
 )

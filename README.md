@@ -1,68 +1,89 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Re-siz-able
 
-## Available Scripts
+First things first, the [**demo**](http://resizable-demo.surge.sh).
 
-In the project directory, you can run:
+Clone the repo and run `npm start` to run the demo locally.
 
-### `npm start`
+## What is it?
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Re-siz-able is a React library that gives your components an ability to become resizable.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## How?
 
-### `npm test`
+When you wrap your components with the `<Resizer/>` component, handles appear. Drag them to change the dimensions of your component.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+<Resizer >
+  <Square />
+</Resizer>
+```
 
-### `npm run build`
+![Demo gif](/demo.gif)
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Just like that? 😳
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+There is actually more to it. There are two main ways of using **Re-siz-able**.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Usage
 
-### `npm run eject`
+### `<Resizer/>`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+You are able to wrap an HTML element with `<Resizer/>` and it will work right away, no setup needed. You can pass props to configure its behavior. **It must receive only one child.** There is no limit for the wrapped component's children.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### You can configure `<Resizer/>` using the following props:
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**`handles`** – an array of names of handles to render; the default is `['left', 'right']`. The possible values are: `right`, `left`, `top`, `bottom`, `top-left`, `top-right`, `bottom-right`, `bottom-left`. An array with at least one handle name must be supplied to enable the functionality – no empty arrays.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**`minWidth`** – the minimum width of the wrapped component in pixels; the default is `100`.
 
-## Learn More
+**`maxWidth`** – the maximum width of the wrapped component in pixels; the default is `1000`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**`minHeight`** – the minimum height of the wrapped component in pixels; the default is `100`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**`maxHeight`** – the maximum height of the wrapped component in pixels; the default is `1000`.
 
-### Code Splitting
+**`hideHandles`** – If `true` the handles become transparent; the default is `false`.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+**`preserveRatio`** – If `true` the dimension ratio of the wrapped component is preserved when resizing; the default is `false`. Works only with bi-directional handles.
 
-### Analyzing the Bundle Size
+**`customHandle`** – A custom handle component can be supplied. It will receive the `position` and `hideHandles` props. `position` has the same values as `handles`, `hideHandles` is boolean. You can take a look at an example in the `/components` folder.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+**`className`** – A class name to customize the style of the wrapper inside `<Resizer/>`.
 
-### Making a Progressive Web App
+### `useResizer` hook
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+The `useResizer` hook can be used inside a React component to provide tools, required for enabling the functionality of being resizable. It is also used internally by the `Resizer` component.
 
-### Advanced Configuration
+#### The hook returns:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+**`elementRef`** – a React ref that can be passed to an element whose dimensions you want to be able to modify. It should be supplied **only** if the element has either `width` or `height` defined. Can be used together with the `defaultWidth` or `defaultHeight` hook config options. However, if both of them are present in the config, there is no need for the `elementRef`. The config options have higher precedence.
 
-### Deployment
+**`width`** – the current width of the component in pixels. The initial value is defined by either the `defaultWidth` config option if it is present or the component's style. Must be passed to an element's inline style.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+**`height`** – the current height of the component in pixels. The initial value is defined by either the `defaultHeight` config option if it is present or the component's style. Must be passed to an element's inline style.
 
-### `npm run build` fails to minify
+**`handleMouseDown()`** – the function that must be passed to an element, which should serve as a handle, and triggered `onMouseDown`. The function accepts a handle name as the parameter. The acceptable handle names are listed above. After receiving the function, an element behaves according to the passed handle name, changing the `width` and `height` variables returned by the hook.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+#### The hook accepts a config object with the following optional properties:
+
+**`minWidth`** – the minimum width in pixels; the default is `100`.
+
+**`maxWidth`** – the maximum width in pixels; the default is `1000`.
+
+**`minHeight`** – the minimum height in pixels; the default is `100`.
+
+**`maxHeight`** – the maximum height in pixels; the default is `1000`.
+
+**`preserveRatio`** – If `true` the dimension ratio of the wrapped component is preserved when resizing; the default is `false`. Works only with bi-directional handles.
+
+**`defaultWidth`** – the default element width in pixels; the default is `undefined`. Must be passed if the element has no defined with.
+
+**`defaultHeight`** – the default height width in pixels; the default is `undefined`. Must be passed if the element has no defined height.
+
+The hook opens many creative possibilities! You can use the received `width` and `height` for anything you want. You can use their values to adjust the font size when resizing a component or change its color! The freedom is yours. 🙌
+
+🛑 **Be careful:** for both the `Resizer` component and the `useResizer` hook the child or the element the hook is used in have to have defined `width` and `height` to avoid unexpected results. It can be done either via a stylesheet or the`defaultWidth` and `defaultHeight` config options in the case of the hook. Nothing would crash if the dimensions are not defined but you might experience unwanted behavior.
+
+---
+
+Made by Leonid Grishchenin

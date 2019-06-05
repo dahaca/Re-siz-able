@@ -11,15 +11,14 @@ const useResizer = resizerConfig => {
     defaultHeight,
   } = {
     minWidth: 100,
-    maxWidth: 600,
+    maxWidth: 1000,
     minHeight: 100,
-    maxHeight: 600,
+    maxHeight: 1000,
     preserveRatio: false,
     defaultWidth: undefined,
     defaultHeight: undefined,
     ...resizerConfig,
   }
-
   const [width, setWidth] = useState(defaultWidth)
   const [height, setHeight] = useState(defaultHeight)
   const [mouseDown, setMouseDown] = useState(false)
@@ -40,10 +39,13 @@ const useResizer = resizerConfig => {
 
   useEffect(() => {
     if (elementRef.current) {
-      setWidth(elementRef.current.getBoundingClientRect().width)
-      setHeight(elementRef.current.getBoundingClientRect().height)
+      if (!defaultWidth) {
+        setWidth(elementRef.current.getBoundingClientRect().width)
+      }
+      if (!defaultHeight)
+        setHeight(elementRef.current.getBoundingClientRect().height)
     } else {
-      if (!defaultHeight || !defaultWidth) {
+      if (!defaultWidth || !defaultHeight) {
         console.error(
           'Define both defaultHeight and defaultWidth for your component or use the elementRef!'
         )
