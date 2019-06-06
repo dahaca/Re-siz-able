@@ -1,24 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 
-const useResizer = resizerConfig => {
-  const {
-    minWidth,
-    maxWidth,
-    minHeight,
-    maxHeight,
-    preserveRatio,
-    defaultWidth,
-    defaultHeight,
-  } = {
-    minWidth: 100,
-    maxWidth: 1000,
-    minHeight: 100,
-    maxHeight: 1000,
-    preserveRatio: false,
-    defaultWidth: undefined,
-    defaultHeight: undefined,
-    ...resizerConfig,
-  }
+const useResizer = ({
+  minWidth = 100,
+  maxWidth = 1000,
+  minHeight = 100,
+  maxHeight = 1000,
+  preserveRatio = false,
+  defaultWidth,
+  defaultHeight,
+}) => {
   const [width, setWidth] = useState(defaultWidth)
   const [height, setHeight] = useState(defaultHeight)
   const [mouseDown, setMouseDown] = useState(false)
@@ -29,11 +19,15 @@ const useResizer = resizerConfig => {
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('touchmove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
+    window.addEventListener('touchend', handleMouseUp)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('touchmove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('touchend', handleMouseUp)
     }
   }, [mouseDown])
 
@@ -55,7 +49,14 @@ const useResizer = resizerConfig => {
 
   const handleMouseDown = handle => e => {
     setMouseDown(handle)
-    setInitialCursorPosition({ x: e.pageX, y: e.pageY })
+    if (e.pageX) {
+      setInitialCursorPosition({ x: e.pageX, y: e.pageY })
+    } else {
+      setInitialCursorPosition({
+        x: e.changedTouches[0].pageX,
+        y: e.changedTouches[0].pageY,
+      })
+    }
     setInitialWidth(width)
     setInitialHeight(height)
   }
@@ -70,6 +71,9 @@ const useResizer = resizerConfig => {
     if (!mouseDown) {
       return
     }
+
+    const xPosition = e.pageX ? e.pageX : e.changedTouches[0].pageX
+    const yPosition = e.pageY ? e.pageY : e.changedTouches[0].pageY
 
     const checkNewWidth = width => {
       if (width < minWidth) return minWidth
@@ -101,56 +105,56 @@ const useResizer = resizerConfig => {
     switch (mouseDown) {
       case 'right':
         setWidth(
-          checkNewWidth(initialWidth + (e.pageX - initialCursorPosition.x))
+          checkNewWidth(initialWidth + (xPosition - initialCursorPosition.x))
         )
         break
 
       case 'left':
         setWidth(
-          checkNewWidth(initialWidth + (initialCursorPosition.x - e.pageX))
+          checkNewWidth(initialWidth + (initialCursorPosition.x - xPosition))
         )
         break
 
       case 'top':
         setHeight(
-          checkNewHeight(initialHeight + (initialCursorPosition.y - e.pageY))
+          checkNewHeight(initialHeight + (initialCursorPosition.y - yPosition))
         )
         break
 
       case 'bottom':
         setHeight(
-          checkNewHeight(initialHeight + (e.pageY - initialCursorPosition.y))
+          checkNewHeight(initialHeight + (yPosition - initialCursorPosition.y))
         )
         break
 
       case 'top-left':
         setDimentions(
-          initialCursorPosition.y - e.pageY,
-          initialCursorPosition.x - e.pageX,
+          initialCursorPosition.y - yPosition,
+          initialCursorPosition.x - xPosition,
           preserveRatio
         )
         break
 
       case 'top-right':
         setDimentions(
-          initialCursorPosition.y - e.pageY,
-          e.pageX - initialCursorPosition.x,
+          initialCursorPosition.y - yPosition,
+          xPosition - initialCursorPosition.x,
           preserveRatio
         )
         break
 
       case 'bottom-right':
         setDimentions(
-          e.pageY - initialCursorPosition.y,
-          e.pageX - initialCursorPosition.x,
+          yPosition - initialCursorPosition.y,
+          xPosition - initialCursorPosition.x,
           preserveRatio
         )
         break
 
       case 'bottom-left':
         setDimentions(
-          e.pageY - initialCursorPosition.y,
-          initialCursorPosition.x - e.pageX,
+          yPosition - initialCursorPosition.y,
+          initialCursorPosition.x - xPosition,
           preserveRatio
         )
         break

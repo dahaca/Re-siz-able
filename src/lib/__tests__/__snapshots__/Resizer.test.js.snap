@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Resizer should render correctly 1`] = `
+<div
+  class="sc-bwzfXH fbmalI"
+>
+  <div>
+    blah
+  </div>
+  <div
+    class="sc-bdVaJa ifPxOL"
+  />
+  <div
+    class="sc-bdVaJa iFZMkA"
+  />
+</div>
+`;

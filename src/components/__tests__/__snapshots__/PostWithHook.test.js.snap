@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test PostWithHook should render correctly 1`] = `
+<div
+  class="sc-htpNat cCdKpA"
+>
+  <div
+    class="sc-bxivhb cgeqyC"
+  >
+    John Doe
+  </div>
+  <div
+    class="sc-ifAKCX lgNMH"
+  />
+  <div
+    class="sc-EHOje jCbNlh"
+  >
+    That's a functional component using the useResizer hook!
+  </div>
+  <div
+    class="sc-bZQynM sc-htoDjs fYJJur"
+  >
+    &lt;=&gt;
+  </div>
+  <div
+    class="sc-bZQynM sc-gzVnrw cGdEkI"
+  >
+    &lt;=&gt;
+  </div>
+  <div
+    class="sc-bZQynM sc-dnqmqq ddxEqp"
+  >
+    &lt;=&gt;
+  </div>
+</div>
+`;

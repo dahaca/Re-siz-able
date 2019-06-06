@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import Resizer from './lib/Resizable/Resizer'
+import Resizer from './lib/re-siz-able'
 import SocialPost, {
   Name,
   Close,

@@ -91,6 +91,7 @@ const Resizer = ({
           key={handle}
           position={handle}
           onMouseDown={handleMouseDown(handle)}
+          onTouchStart={handleMouseDown(handle)}
           hideHandles={hideHandles}
         />
       ))}

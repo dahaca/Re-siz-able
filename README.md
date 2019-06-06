@@ -6,7 +6,7 @@ Clone the repo and run `npm start` to run the demo locally.
 
 ## What is it?
 
-Re-siz-able is a React library that gives your components an ability to become resizable.
+Re-siz-able is a React library that gives your components an ability to become resizable. Mobile-friendly! 📱
 
 ## How?
 

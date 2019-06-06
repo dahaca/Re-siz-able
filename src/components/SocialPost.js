@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Resizer from '../lib/Resizable/Resizer'
+import Resizer from '../lib/re-siz-able'
 
 export const PostContainer = styled.div`
   position: relative;

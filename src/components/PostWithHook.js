@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import useResizer from '../lib/Resizable/useResizer'
+import { useResizer } from '../lib/re-siz-able'
 import { PostContainer, Name, Close, Description } from './SocialPost'
 
 const Arrow = styled.div`
