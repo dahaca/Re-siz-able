@@ -17,6 +17,7 @@ import useResizer from './useResizer'
 const DefaultHandle = styled.div`
   position: absolute;
   opacity: 0;
+  touch-action: none;
   user-select: none;
 
   ${({ position }) => generateStyles(position)};

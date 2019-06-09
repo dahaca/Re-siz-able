@@ -46,7 +46,7 @@ const CenteredTallContainer = styled.div`
   justify-self: center;
 
   @media screen and (max-width: ${SCREEN_SIZE.MOBILE}) {
-    width: 121%;
+    width: 100vw;
   }
 `
 
@@ -55,7 +55,7 @@ const TallContainer = styled.div`
 
   @media screen and (max-width: ${SCREEN_SIZE.MOBILE}) {
     justify-self: center;
-    width: 121%;
+    width: 100vw;
   }
 `
 
@@ -67,7 +67,7 @@ const ElementAtBottomContainer = styled.div`
 
   @media screen and (max-width: ${SCREEN_SIZE.MOBILE}) {
     justify-self: center;
-    width: 121%;
+    width: 100vw;
   }
 `
 

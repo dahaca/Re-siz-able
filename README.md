@@ -88,6 +88,9 @@ The hook opens many creative possibilities! You can use the received `width` and
 
 🛑 **Be careful:** for both the `Resizer` component and the `useResizer` hook the child or the element the hook is used in have to have defined `width` and `height` to avoid unexpected results. It can be done either via a stylesheet or the`defaultWidth` and `defaultHeight` config options in the case of the hook. Nothing would crash if the dimensions are not defined but you might experience unwanted behavior.
 
+
+⚠️ _There are problems with resizing vertically on touch devices._
+
 ---
 
 Made by Leonid Grishchenin
