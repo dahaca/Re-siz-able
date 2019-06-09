@@ -6,8 +6,10 @@ import {
   bool,
   string,
   arrayOf,
+  oneOfType,
   oneOf,
   object,
+  func,
 } from 'prop-types'
 import generateStyles from './utils/generateStyles'
 import useResizer from './useResizer'
@@ -31,6 +33,7 @@ const DefaultHandle = styled.div`
 
 const Wrapper = styled.div`
   position: relative;
+  touch-action: none;
 
   > :first-child {
     width: ${({ width }) => width && '100%'};
@@ -45,17 +48,19 @@ const Resizer = ({
   maxWidth = 1000,
   minHeight = 100,
   maxHeight = 1000,
+  margin,
   hideHandles,
   preserveRatio,
   customHandle,
   className,
 }) => {
-  const { elementRef, width, height, handleMouseDown } = useResizer({
+  const { elementRef, width, height, handlePointerDown } = useResizer({
     minWidth,
     maxWidth,
     minHeight,
     maxHeight,
     preserveRatio,
+    margin,
   })
 
   if (handles.length === 0) {
@@ -73,7 +78,7 @@ const Resizer = ({
         ref: elementRef,
       })
     } catch (err) {
-      console.error('The Resizer component can have only one child!')
+      console.error('The Resizer component must have exactly one child!')
     }
   }
 
@@ -90,8 +95,8 @@ const Resizer = ({
         <Handle
           key={handle}
           position={handle}
-          onMouseDown={handleMouseDown(handle)}
-          onTouchStart={handleMouseDown(handle)}
+          onMouseDown={handlePointerDown(handle)}
+          onTouchStart={handlePointerDown(handle)}
           hideHandles={hideHandles}
         />
       ))}
@@ -116,10 +121,11 @@ Resizer.propTypes = {
   minWidth: number,
   maxWidth: number,
   minHeight: number,
-  maxHeigh: number,
+  maxHeight: number,
+  margin: number,
   hideHandles: bool,
   preserveRatio: bool,
-  customHandle: object,
+  customHandle: oneOfType([object, element, func]),
   className: string,
 }
 

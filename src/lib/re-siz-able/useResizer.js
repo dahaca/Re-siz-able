@@ -5,39 +5,41 @@ const useResizer = ({
   maxWidth = 1000,
   minHeight = 100,
   maxHeight = 1000,
+  margin = 32,
   preserveRatio = false,
   defaultWidth,
   defaultHeight,
 }) => {
   const [width, setWidth] = useState(defaultWidth)
   const [height, setHeight] = useState(defaultHeight)
-  const [mouseDown, setMouseDown] = useState(false)
+  const [pointerDown, setPointerDown] = useState(false)
   const [initialCursorPosition, setInitialCursorPosition] = useState(null)
   const [initialWidth, setInitialWidth] = useState()
   const [initialHeight, setInitialHeight] = useState()
   const elementRef = useRef()
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('touchmove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-    window.addEventListener('touchend', handleMouseUp)
+    window.addEventListener('mousemove', handlePointerMove)
+    window.addEventListener('touchmove', handlePointerMove)
+    window.addEventListener('mouseup', handlePointerUp)
+    window.addEventListener('touchend', handlePointerUp)
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('touchmove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
-      window.removeEventListener('touchend', handleMouseUp)
+      window.removeEventListener('mousemove', handlePointerMove)
+      window.removeEventListener('touchmove', handlePointerMove)
+      window.removeEventListener('mouseup', handlePointerUp)
+      window.removeEventListener('touchend', handlePointerUp)
     }
-  }, [mouseDown])
+  }, [pointerDown])
 
   useEffect(() => {
     if (elementRef.current) {
       if (!defaultWidth) {
-        setWidth(elementRef.current.getBoundingClientRect().width)
+        setWidth(Math.round(elementRef.current.getBoundingClientRect().width))
       }
+
       if (!defaultHeight)
-        setHeight(elementRef.current.getBoundingClientRect().height)
+        setHeight(Math.round(elementRef.current.getBoundingClientRect().height))
     } else {
       if (!defaultWidth || !defaultHeight) {
         console.error(
@@ -47,46 +49,50 @@ const useResizer = ({
     }
   }, [])
 
-  const handleMouseDown = handle => e => {
-    setMouseDown(handle)
-    if (e.pageX) {
-      setInitialCursorPosition({ x: e.pageX, y: e.pageY })
-    } else {
-      setInitialCursorPosition({
-        x: e.changedTouches[0].pageX,
-        y: e.changedTouches[0].pageY,
-      })
-    }
+  const handlePointerDown = handle => e => {
+    setPointerDown(handle)
+
+    setInitialCursorPosition({
+      x: Math.round(e.pageX || e.changedTouches[0].pageX),
+      y: Math.round(e.pageY || e.changedTouches[0].pageY),
+    })
+
     setInitialWidth(width)
     setInitialHeight(height)
   }
 
-  const handleMouseUp = () => {
-    if (mouseDown) {
-      setMouseDown(null)
+  const handlePointerUp = () => {
+    if (pointerDown) {
+      setPointerDown(null)
     }
   }
 
-  const handleMouseMove = e => {
-    if (!mouseDown) {
+  const handlePointerMove = e => {
+    if (!pointerDown) {
       return
     }
 
-    const xPosition = e.pageX ? e.pageX : e.changedTouches[0].pageX
-    const yPosition = e.pageY ? e.pageY : e.changedTouches[0].pageY
+    const xPosition = Math.round(e.pageX ? e.pageX : e.changedTouches[0].pageX)
+    const yPosition = Math.round(e.pageY ? e.pageY : e.changedTouches[0].pageY)
 
     const checkNewWidth = width => {
+      const maxScreenWidth = Math.round(window.innerWidth) - margin * 2
+
+      if (maxScreenWidth < maxWidth) {
+        maxWidth = maxScreenWidth
+      }
+
       if (width < minWidth) return minWidth
       if (width > maxWidth) return maxWidth
 
-      return width
+      return Math.round(width)
     }
 
     const checkNewHeight = height => {
       if (height < minHeight) return minHeight
       if (height > maxHeight) return maxHeight
 
-      return height
+      return Math.round(height)
     }
 
     const setDimentions = (deltaHeight, deltaWidth, preserveRatio) => {
@@ -102,7 +108,7 @@ const useResizer = ({
       setWidth(checkNewWidth(initialWidth + deltaWidth))
     }
 
-    switch (mouseDown) {
+    switch (pointerDown) {
       case 'right':
         setWidth(
           checkNewWidth(initialWidth + (xPosition - initialCursorPosition.x))
@@ -165,7 +171,7 @@ const useResizer = ({
     }
   }
 
-  return { elementRef, width, height, handleMouseDown }
+  return { elementRef, width, height, handlePointerDown }
 }
 
 export default useResizer

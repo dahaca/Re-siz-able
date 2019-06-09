@@ -42,11 +42,13 @@ You are able to wrap an HTML element with `<Resizer/>` and it will work right aw
 
 **`maxHeight`** – the maximum height of the wrapped component in pixels; the default is `1000`.
 
+**`margin`** – The page margin for defining the maximum possible width of a resizable element if its width is larger that the screen width. Useful for having a responsive, mobile-friendly component with minimum setup; the default is `32`.
+
 **`hideHandles`** – If `true` the handles become transparent; the default is `false`.
 
 **`preserveRatio`** – If `true` the dimension ratio of the wrapped component is preserved when resizing; the default is `false`. Works only with bi-directional handles.
 
-**`customHandle`** – A custom handle component can be supplied. It will receive the `position` and `hideHandles` props. `position` has the same values as `handles`, `hideHandles` is boolean. You can take a look at an example in the `/components` folder.
+**`customHandle`** – A custom handle component can be supplied. It will receive the `position`, `hideHandles`, `onMouseDown` and `onTouchStartprops` props. `position` has the same values as `handles`, `hideHandles` is boolean. You can take a look at an example in the `/components` folder.
 
 **`className`** – A class name to customize the style of the wrapper inside `<Resizer/>`.
 
@@ -73,6 +75,8 @@ The `useResizer` hook can be used inside a React component to provide tools, req
 **`minHeight`** – the minimum height in pixels; the default is `100`.
 
 **`maxHeight`** – the maximum height in pixels; the default is `1000`.
+
+**`margin`** – The page margin for defining the maximum possible width of a resizable element if its width is larger that the screen width. Useful for having a responsive, mobile-friendly component with minimum setup; the default is `32`.
 
 **`preserveRatio`** – If `true` the dimension ratio of the wrapped component is preserved when resizing; the default is `false`. Works only with bi-directional handles.
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Resizer from '../lib/re-siz-able'
+import { SCREEN_SIZE } from '../constants'
 
 export const PostContainer = styled.div`
   position: relative;
@@ -11,6 +12,9 @@ export const PostContainer = styled.div`
   box-shadow: 0px 5px 10px 0 #d2d2d2;
   border-radius: 10px;
   border-bottom: 15px solid #87cefa;
+  @media screen and (max-width: ${SCREEN_SIZE.TABLET}) {
+    max-width: calc(100vw - 4rem);
+  }
 `
 
 export const Name = styled.div`

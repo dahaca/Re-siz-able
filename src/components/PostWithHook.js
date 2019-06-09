@@ -8,6 +8,7 @@ const Arrow = styled.div`
   user-select: none;
   position: absolute;
   bottom: 1rem;
+  touch-action: none;
 
   :hover {
     color: #87cefa;
@@ -35,10 +36,15 @@ const NwseArrow = styled(Arrow)`
   transform: rotate(45deg);
 `
 
+const getFontSize = height => {
+  return Math.round(Math.log10(height / 25) * 100) / 100 + 'rem'
+}
+
 // Uncomment the default values and remove the ref for an alternative way of using useResizer()!
 const resizerConfig = {
   minHeight: 270,
-  minWidth: 300,
+  maxHeight: 600,
+  minWidth: 200,
   maxWidth: 800,
   preserveRatio: true,
   // defaultWidth: 400,
@@ -46,20 +52,41 @@ const resizerConfig = {
 }
 
 const PostWithHook = () => {
-  const { elementRef, width, height, handleMouseDown } = useResizer(
+  const { elementRef, width, height, handlePointerDown } = useResizer(
     resizerConfig
   )
 
   return (
-    <PostContainer ref={elementRef} style={{ width: width, height: height }}>
+    <PostContainer
+      ref={elementRef}
+      style={{
+        width: width,
+        height: height,
+        fontSize: getFontSize(height),
+      }}
+    >
       <Name>John Doe</Name>
       <Close />
       <Description>
-        That's a functional component using the useResizer hook!
+        That's a functional component using the useResizer hook! My width is{' '}
+        {width} pixels. Try changing height to resize the font too.
       </Description>
-      <NsArrow onMouseDown={handleMouseDown('bottom')}>{'<=>'}</NsArrow>
-      <EwArrow onMouseDown={handleMouseDown('right')}>{'<=>'}</EwArrow>
-      <NwseArrow onMouseDown={handleMouseDown('bottom-right')}>
+      <NsArrow
+        onMouseDown={handlePointerDown('bottom')}
+        onTouchStart={handlePointerDown('bottom')}
+      >
+        {'<=>'}
+      </NsArrow>
+      <EwArrow
+        onMouseDown={handlePointerDown('right')}
+        onTouchStart={handlePointerDown('right')}
+      >
+        {'<=>'}
+      </EwArrow>
+      <NwseArrow
+        onMouseDown={handlePointerDown('bottom-right')}
+        onTouchStart={handlePointerDown('bottom-right')}
+      >
         {'<=>'}
       </NwseArrow>
     </PostContainer>

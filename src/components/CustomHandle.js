@@ -1,9 +1,11 @@
+import React from 'react'
 import styled, { css } from 'styled-components'
 
-const CustomHandle = styled.div`
+const Handle = styled.div`
   position: absolute;
   opacity: 0;
   user-select: none;
+  touch-action: none;
 
   ${({ position }) => {
     let positionSpecificCss
@@ -65,7 +67,6 @@ const CustomHandle = styled.div`
 
       default:
         positionSpecificCss = ''
-        console.error('Invalid handle type!')
         break
     }
 
@@ -81,5 +82,14 @@ const CustomHandle = styled.div`
     cursor: grabbing;
   }
 `
+
+const CustomHandle = ({ position, hideHandles, onMouseDown, onTouchStart }) => (
+  <Handle
+    position={position}
+    hideHandles={hideHandles}
+    onMouseDown={onMouseDown}
+    onTouchStart={onTouchStart}
+  />
+)
 
 export default CustomHandle
