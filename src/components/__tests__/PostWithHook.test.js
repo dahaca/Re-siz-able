@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, mount } from 'enzyme'
+import { render } from 'enzyme'
 import PostWithHook from '../PostWithHook'
 
 describe('Test PostWithHook', () => {
@@ -7,9 +7,9 @@ describe('Test PostWithHook', () => {
     expect(render(<PostWithHook />)).toMatchSnapshot()
   })
 
-  it('should change width by 20px', () => {
-    const post = mount(<PostWithHook />)
-    const rightHandle = post.find('EwArrow')
-    rightHandle.simulate('click')
-  })
+  // it('should change width by 20px', () => {
+  //   const post = mount(<PostWithHook />)
+  //   const rightHandle = post.find('EwArrow')
+  //   rightHandle.simulate('mousedown')
+  // })
 })

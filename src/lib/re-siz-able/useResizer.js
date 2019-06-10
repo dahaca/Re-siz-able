@@ -1,15 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 
-const useResizer = ({
-  minWidth = 100,
-  maxWidth = 1000,
-  minHeight = 100,
-  maxHeight = 1000,
-  margin = 32,
-  preserveRatio = false,
-  defaultWidth,
-  defaultHeight,
-}) => {
+const useResizer = (
+  {
+    minWidth = 100,
+    maxWidth = 1000,
+    minHeight = 100,
+    maxHeight = 1000,
+    margin = 32,
+    preserveRatio = false,
+    defaultWidth,
+    defaultHeight,
+  } = {
+    minWidth: 100,
+    maxWidth: 1000,
+    minHeight: 100,
+    maxHeight: 1000,
+    margin: 32,
+    preserveRatio: false,
+    defaultWidth: 250,
+    defaultHeight: 250,
+  }
+) => {
   const [width, setWidth] = useState(defaultWidth)
   const [height, setHeight] = useState(defaultHeight)
   const [pointerDown, setPointerDown] = useState(false)
